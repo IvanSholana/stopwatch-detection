@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-time Image Recognition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+  </head>
+  <body>
+    <h1>Real-time Image Recognition</h1>
+    <h1>Video Stream</h1>
+    <div>
+      <video
+        id="video"
+        width="640"
+        height="480"
+        autoplay
+        muted
+        playsinline
+      ></video>
+    </div>
+    <h1>Canvas Stream</h1>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <script>
+      var socket = io.connect(
+        window.location.protocol + '//' + window.location.host,
+      );
+
+      socket.on('connect', function () {
+        console.log('Connected to server');
+      });
+
+      // Function to get the appropriate media stream based on device type
+      function getStream() {
+        if (
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent,
+          )
+        ) {
+          // If the user is on a mobile device, use the back camera
+          return navigator.mediaDevices.getUserMedia({
+            video: {facingMode: {exact: 'environment'}},
+          });
+        } else {
+          // Otherwise, use any available video device
+          return navigator.mediaDevices.getUserMedia({video: true});
+        }
+      }
+
+      // Get access to the camera and stream video
+      getStream()
+        .then(function (stream) {
+          var video = document.getElementById('video');
+          video.srcObject = stream;
+
+          // Play the video after user interaction
+          video.onloadedmetadata = function () {
+            video.play();
+          };
+
+          // Initialize canvas for drawing frames
+          var canvas = document.getElementById('canvas');
+          var context = canvas.getContext('2d');
+
+          // Continuously stream frames to the server
+          setInterval(function () {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            var imageData = canvas.toDataURL('image/jpeg', 0.8);
+            socket.emit('stream', imageData);
+          }, 600); // Adjust the interval as needed
+        })
+        .catch(function (err) {
+          console.log('An error occurred: ' + err);
+        });
+    </script>
+  </body>
+</html>
