@@ -104,6 +104,3 @@ We warmly welcome contributions to this project. To contribute, please follow th
 5. Create a Pull Request on GitHub.
 
 Please describe your changes and the reasoning behind them in the Pull Request.
-
-## License
-This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this code in accordance with the terms of the license.
