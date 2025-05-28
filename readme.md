@@ -1,3 +1,7 @@
+# Video Demo
+
+https://github.com/user-attachments/assets/083b9ef7-0886-4da1-90d7-f79f5bb973e3
+
 # Stopwatch Number Detection
 
 This project is an application for detecting and recognizing digits on stopwatches within a video stream from a camera, utilizing the YOLO (You Only Look Once) model. The application can detect up to two stopwatches in a single frame, recognize the displayed digits, and save both the images and detected times into a CSV file.
